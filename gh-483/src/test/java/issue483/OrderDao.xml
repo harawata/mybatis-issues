@@ -20,16 +20,6 @@
 
 <mapper namespace="issue483.OrderDao">
 
-	<insert id="saveOrderDetail" parameterType="issue483.Order">
-		insert into tbl_order_detail
-		(id, amnt, cnt)
-		values
-		<foreach collection="details" item="od" index="index"
-			separator=",">
-			(#{od.id}, #{od.amount}, #{od.count})
-		</foreach>
-	</insert>
-
 	<insert id="saveOrderDetail_1" parameterType="issue483.Order">
 		insert into tbl_order_detail
 		(id, amnt, cnt)
