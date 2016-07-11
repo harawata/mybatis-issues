@@ -1,0 +1,5 @@
+task create(type: Copy) {
+  from '_simple'
+  into projectName
+  expand([projectName: projectName])
+}

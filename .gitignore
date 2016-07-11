@@ -5,6 +5,7 @@ log.roo
 .classpath
 .springBeans
 .DS_Store
+.gradle
 *.iml
 *.ipr
 *.iws
