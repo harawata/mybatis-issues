@@ -5,7 +5,7 @@ This repository helps contributors to create [SSCCE](http://sscce.org) : Short, 
 ## Create a new repo using template
 
 1. Fork this repository on GitHub.
-1. Clone your fork to your local
+1. Clone your fork to local.
 
   ```sh
 $ git clone git@github.com:YOUR_ACCOUNT/mybatis-issues.git
@@ -24,4 +24,4 @@ $ git add -A
 $ git commit -m "Some commit message"
 $ git push
 ```
-1. Now, you can create a pull request on GitHub.
+1. Let us know the URL of your repository.
