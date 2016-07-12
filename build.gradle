@@ -1,5 +1,14 @@
+defaultTasks 'create'
+
+if (!project.hasProperty("projectName")) {
+  throw new GradleException("Project name is required. e.g. 'gradle -PprojectName=XXX'")
+}
+if (!project.hasProperty("template")) {
+  ext.template = '_simple'
+}
+
 task create(type: Copy) {
-  from '_simple'
+  from project.template
   into projectName
   expand([projectName: projectName])
 }
