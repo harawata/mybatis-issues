@@ -18,6 +18,7 @@ $ gradle -PprojectName=gh-123 -Ptemplate=_simple
   - template : The name of the template directory. The default is '_simple'.
 	  - _simple : A simple MyBatis project.
 	  - _spring : A basic MyBatis-Spring project.
+	  - _spring-boot : A basic MyBatis-Spring-Boot project.
 1. Make changes so that the project can reproduce your problem.
 1. Commit your changes and push them to your forked repository.
 
