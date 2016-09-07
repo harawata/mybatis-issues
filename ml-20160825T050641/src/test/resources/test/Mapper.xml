@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2016 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap type="test.Unit" id="unitMap">
+    <result property="id" column="id" />
+    <result property="name" column="name" />
+    <result property="rate" column="rate" />
+    <result property="subUnit.name" column="subunit_name" />
+    <result property="subUnit.isException" column="is_exception" />
+  </resultMap>
+
+  <resultMap type="test.Unit" id="unitMapWithDiscriminator">
+    <result property="id" column="id" />
+    <result property="rate" column="rate" />
+    <result property="subUnit.name" column="subunit_name" />
+    <result property="subUnit.isException" column="is_exception" />
+    <discriminator javaType="int" column="unit_type">
+      <case value="1" resultMap="type1UnitMap"/>
+      <case value="2" resultMap="type2UnitMap"/>
+    </discriminator>
+  </resultMap>
+
+  <resultMap type="test.Type1Unit" id="type1UnitMap">
+    <result property="type1Price" column="type1_price" />
+  </resultMap>
+
+  <resultMap type="test.Type2Unit" id="type2UnitMap">
+    <result property="type2Price" column="type2_price" />
+  </resultMap>
+
+  <select id="selectUnits" resultMap="unitMapWithDiscriminator">
+    select id, rate, subunit_name, is_exception, unit_type, type1_price, type2_price
+    from unit where id in (1,2,3)
+  </select>
+
+</mapper>
