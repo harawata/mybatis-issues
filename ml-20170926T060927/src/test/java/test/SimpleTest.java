@@ -24,12 +24,14 @@ import java.sql.Connection;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -56,6 +58,33 @@ public class SimpleTest {
     session.close();
   }
 
+  @Before
+  public void clearRows() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      mapper.clearTableA();
+      sqlSession.commit();
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  private void assertRows() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Map<String, String>> rows = mapper.select();
+      assertEquals(2, rows.size());
+      assertEquals("word 2", rows.get(0).get("B"));
+      assertEquals("word 3", rows.get(0).get("C"));
+      assertEquals("word 2", rows.get(1).get("B"));
+      assertEquals("word 3", rows.get(1).get("C"));
+    } finally {
+      sqlSession.close();
+    }
+  }
+
   @Test
   public void shouldInsert() throws Exception {
     SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -70,6 +99,7 @@ public class SimpleTest {
     } finally {
       sqlSession.close();
     }
+    assertRows();
   }
 
   @Test
@@ -78,8 +108,8 @@ public class SimpleTest {
     Connection conn = session.getConnection();
 
     List<Struct> bankInfoList = new ArrayList<Struct>();
-    Struct bankInfo1 = conn.createStruct("S_BANK_INFO", new Object[] { "aa", "bb", "cc" });
-    Struct bankInfo2 = conn.createStruct("S_BANK_INFO", new Object[] { "dd", "ee", "ff" });
+    Struct bankInfo1 = conn.createStruct("S_BANK_INFO", new Object[] { "word 1", "word 2", "word 3" });
+    Struct bankInfo2 = conn.createStruct("S_BANK_INFO", new Object[] { "word 1", "word 2", "word 3" });
     bankInfoList.add(bankInfo1);
     bankInfoList.add(bankInfo2);
 
@@ -89,5 +119,7 @@ public class SimpleTest {
     ps.setArray(1, array);
     assertFalse(ps.execute());
     conn.commit();
+
+    assertRows();
   }
 }

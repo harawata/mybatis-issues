@@ -11,9 +11,18 @@
 package test;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface Mapper {
   void saveSyncBankInfos(@Param("dataset") List<Bkdataset> dataset);
+
+  @Delete("delete from testa")
+  int clearTableA();
+
+  @Select("select * from testa")
+  List<Map<String, String>> select();
 }
