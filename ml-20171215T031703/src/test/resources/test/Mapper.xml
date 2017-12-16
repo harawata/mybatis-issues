@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2016 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap id="poolDoOutDetailResult" type="test.PoolDoOutDetailModel">
+    <result column="barcode" property="barcode" jdbcType="VARCHAR" />
+    <result column="equipment_id" property="equipmentId"
+      jdbcType="INTEGER" />
+    <result column="equipment_name" property="equipmentName"
+      jdbcType="VARCHAR" />
+    <result column="op_type" property="opType" jdbcType="INTEGER" />
+    <result column="op_type_name" property="opTypeName" jdbcType="VARCHAR" />
+    <result column="do_code" property="doCode" jdbcType="VARCHAR" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="material_code" property="materialCode"
+      jdbcType="VARCHAR" />
+    <result column="material_name" property="materialName"
+      jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="NUMERIC" />
+    <result column="quality_type" property="qualityType"
+      jdbcType="INTEGER" />
+    <result column="shift_name" property="shiftName" jdbcType="VARCHAR" />
+    <result column="person_name" property="personName" jdbcType="VARCHAR" />
+    <result column="happen_time" property="happenTime" jdbcType="TIMESTAMP" />
+    <result column="mold_code" property="moldCode" jdbcType="VARCHAR" />
+    <result column="failreason_name" property="failReason"
+      jdbcType="VARCHAR" />
+    <result column="operation_id" property="operationId"
+      jdbcType="VARCHAR" />
+    <result column="dest_snapshot_id" property="destSnapshotId"
+      jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getOutDetailRecords" resultMap="poolDoOutDetailResult">
+    select
+    barcode,
+    equipment_id, equipment_name, op_type, op_type_name,
+    do_code,
+    batch_no, material_code, material_name, quantity,
+    quality_type,
+    shift_name, person_name, happen_time, mold_code,
+    failreason_name,
+    operation_id, dest_snapshot_id
+    from
+    pool_do_out_detail
+  </select>
+
+</mapper>
