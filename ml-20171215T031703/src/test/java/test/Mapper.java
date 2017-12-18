@@ -14,6 +14,6 @@ import java.util.List;
 
 public interface Mapper {
 
-  List<PoolDoOutDetailModel> getOutDetailRecords();
+  List<PoolDoOutDetailModel> getOutDetailRecords(List<String> params);
 
 }

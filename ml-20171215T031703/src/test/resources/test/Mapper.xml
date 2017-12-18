@@ -63,6 +63,13 @@
     operation_id, dest_snapshot_id
     from
     pool_do_out_detail
+    <where>
+      AND operation_id in
+      <foreach item="op_id" index="index" collection="list"
+        open="(" separator="," close=")">
+        #{op_id,javaType=String,jdbcType=VARCHAR}
+      </foreach>
+    </where>
   </select>
 
 </mapper>
