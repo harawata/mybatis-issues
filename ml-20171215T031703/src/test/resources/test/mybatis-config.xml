@@ -29,8 +29,9 @@
       </transactionManager>
       <dataSource type="UNPOOLED">
         <property name="driver" value="org.hsqldb.jdbcDriver" />
-        <property name="url" value="jdbc:hsqldb:mem:mybatisissues" />
+        <property name="url" value="jdbc:sqlserver://192.168.59.100:1433;database=test" />
         <property name="username" value="sa" />
+        <property name="password" value="sa" />
       </dataSource>
     </environment>
   </environments>

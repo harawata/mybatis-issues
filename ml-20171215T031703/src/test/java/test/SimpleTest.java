@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 
 import java.io.Reader;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -106,6 +108,34 @@ public class SimpleTest {
     runner.runScript(reader);
     reader.close();
     session.close();
+  }
+
+  private static void insertBulkDummyData(SqlSession session) throws SQLException {
+    Connection con = session.getConnection();
+    try {
+      int totalRowCount = 200000;
+      String sql = "INSERT INTO fact_pool_do_out_test (_update_time, _source_id, _source_name, do_out_id, do_code, process_id, process_code, process_name, process_seq, manu_process_code, parent_do_id, parent_do_code, parent_process_id, parent_process_code, parent_process_name, parent_process_seq, material_code, material_name, material_spec, material_unit, batch_no, barcode, quantity, equipment_id, equipment_code, equipment_name, model_id, model_name, location_id, location_name, failreason_id, failreason_name, person_code, person_name, happen_time, shift_date, shift_name, shift_start_time, shift_end_time, type, iokey, bucket_no, mold_code, process_uid, packet_barcode, pallet_barcode, equip_container, quality_type, parent_barcode, op_type, op_type_name, material_status, material_status_name, operation_id, timestamp) "
+          +
+          "VALUES (getdate(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NEWID(), '')";
+      PreparedStatement statement = con.prepareStatement(sql);
+
+      // fill up rows up to totalRowCount
+      for (int i = 0; i < totalRowCount; i++) {
+        // there're 52 params, set them all to NULL
+        for (int j = 1; j <= 52; j++) {
+          statement.setObject(j, null);
+        }
+        statement.addBatch();
+      }
+
+      statement.executeBatch();
+
+      System.out.println("insert bulk dummy data success");
+    } catch (Exception ex) {
+      System.out.println("exception: " + ex.getMessage());
+    } finally {
+      con.close();
+    }
   }
 
   @Test
