@@ -53,7 +53,8 @@ public class SimpleTest {
   public void shouldGetAUser() {
     SqlSession sqlSession = sqlSessionFactory.openSession();
     try {
-      User user = sqlSession.selectOne("test.A.getUser", 1);
+      A mapper = sqlSession.getMapper(A.class);
+      User user = mapper.getUser();
       Assert.assertEquals(Integer.valueOf(1), user.getId());
       Assert.assertEquals("User1", user.getName());
     } finally {
