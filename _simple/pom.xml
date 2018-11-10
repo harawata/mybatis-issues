@@ -3,10 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.mybatis.issues</groupId>
   <artifactId>${projectName}</artifactId>
-    <packaging>jar</packaging>
-    <version>0.0.1-SNAPSHOT</version>
-    <properties>
+  <packaging>jar</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mybatis.version>3.4.6</mybatis.version>
   </properties>
   <dependencies>
     <dependency>
@@ -29,7 +30,7 @@
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
-      <version>3.4.2</version>
+      <version>${mybatis.version}</version>
     </dependency>
   </dependencies>
 </project>
