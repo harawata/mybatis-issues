@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2016 the original author or authors.
+--    Copyright 2009-2018 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -13,13 +13,6 @@
 --    See the License for the specific language governing permissions and
 --    limitations under the License.
 --
-
-drop table users if exists;
-
-create table users (
-  id int,
-  name varchar(20)
-);
 
 insert into users (id, name) values(1, 'User1');
 insert into users (id, name) values(2, 'User2');
