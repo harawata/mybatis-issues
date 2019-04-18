@@ -1,4 +1,3 @@
-
 package test;
 
 import org.mybatis.spring.annotation.MapperScan;
