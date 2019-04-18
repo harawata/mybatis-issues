@@ -1,6 +1,7 @@
 package test;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class SpringTest {
   @Test
   public void shouldGetAUser() {
     User user = mapper.getUser(1);
-    Assert.assertEquals("User1", user.getName());
+    assertEquals("User1", user.getName());
   }
 
   @Test
