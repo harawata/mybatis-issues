@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.ibatis.migration.ConnectionProvider;
+import org.apache.ibatis.migration.DataSourceConnectionProvider;
 import org.apache.ibatis.migration.FileMigrationLoader;
 import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.migration.operations.UpOperation;
@@ -34,12 +34,7 @@ public class MyBatisMigrationsPopulator implements DatabasePopulator {
   @Override
   public void populate(Connection connection) throws SQLException, ScriptException {
     try {
-      new UpOperation().operate(new ConnectionProvider() {
-        @Override
-        public Connection getConnection() throws SQLException {
-          return dataSource.getConnection();
-        }
-      }, createMigrationsLoader(), null, null);
+      new UpOperation().operate(new DataSourceConnectionProvider(dataSource), createMigrationsLoader(), null, null);
     } catch (MigrationException e) {
       throw new UncategorizedScriptException("Migration failed.", e.getCause());
     }
