@@ -12,6 +12,7 @@ import org.apache.ibatis.migration.DataSourceConnectionProvider;
 import org.apache.ibatis.migration.FileMigrationLoader;
 import org.apache.ibatis.migration.MigrationException;
 import org.apache.ibatis.migration.operations.UpOperation;
+import org.apache.ibatis.migration.options.DatabaseOperationOption;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.jdbc.datasource.init.UncategorizedScriptException;
@@ -24,17 +25,20 @@ public class MyBatisMigrationsPopulator implements DatabasePopulator {
 
   private final Properties properties;
 
-  public MyBatisMigrationsPopulator(DataSource dataSource, String scriptsDir, Properties properties) {
+  private final DatabaseOperationOption options;
+
+  public MyBatisMigrationsPopulator(DataSource dataSource, String scriptsDir, Properties properties, DatabaseOperationOption options) {
     super();
     this.dataSource = dataSource;
     this.scriptsDir = scriptsDir;
     this.properties = properties;
+    this.options = options;
   }
 
   @Override
   public void populate(Connection connection) throws SQLException, ScriptException {
     try {
-      new UpOperation().operate(new DataSourceConnectionProvider(dataSource), createMigrationsLoader(), null, null);
+      new UpOperation().operate(new DataSourceConnectionProvider(dataSource), createMigrationsLoader(), options, null);
     } catch (MigrationException e) {
       throw new UncategorizedScriptException("Migration failed.", e.getCause());
     }
