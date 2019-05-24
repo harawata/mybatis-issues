@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap type="test.some_table_name" id="data">
+    <result property="long_varibary_column"
+      column="long_varibary_column" />
+  </resultMap>
+
+  <select id="getlong_varibary_column" resultType="test.some_table_name">
+    select to_hex(long_varibary_column) long_varibary_column
+    from some_table_name where id = #{id}
+    limit 1
+  </select>
+
+</mapper>
