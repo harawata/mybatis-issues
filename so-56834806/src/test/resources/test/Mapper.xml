@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap type="test.User" id="userRM">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+  </resultMap>
+
+  <insert id="saveUsers" statementType="CALLABLE">
+    {call SAVE_USERS(
+      #{singleUser,jdbcType=STRUCT,typeHandler=test.UserTypeHandler},
+      #{users,typeHandler=test.UserListTypeHandler},
+      #{namePrefix},
+      #{outParam.userCount,jdbcType=INTEGER,mode=OUT},
+      #{outParam.userStruct,jdbcType=STRUCT,jdbcTypeName=S_USER_OBJ,mode=OUT,typeHandler=test.UserTypeHandler},
+      #{outParam.userStructArray,jdbcType=ARRAY,jdbcTypeName=S_USER_OBJ_LIST,mode=OUT,typeHandler=test.UserListTypeHandler},
+      #{outParam.userCursor,jdbcType=CURSOR,javaType=java.sql.ResultSet,mode=OUT,resultMap=userRM}
+    )}
+  </insert>
+
+</mapper>
