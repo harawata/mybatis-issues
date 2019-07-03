@@ -10,7 +10,8 @@ end;
 $
 -- @DELIMITER ;
 
-drop type S_USER_OBJ_LIST;
+-- just to avoid error
+create or replace type S_USER_OBJ_LIST as object;
 
 create or replace type S_USER_OBJ as object (
   id integer,
@@ -36,7 +37,7 @@ create or replace procedure SAVE_USERS(
 ) is
 begin
 
-	insert into users (id, name) values (single_user.id, name_prefix || single_user.name);
+  insert into users (id, name) values (single_user.id, name_prefix || single_user.name);
 
   for i in user_list.first .. user_list.last loop
     insert into users (id, name)
@@ -45,7 +46,6 @@ begin
 
   select count(*) into user_count from users;
 
-  user_struct := S_USER_OBJ(null, null);
   select S_USER_OBJ(u.id, u.name) into user_struct from users u where u.id = 1;
 
   select * bulk collect into user_struct_array
