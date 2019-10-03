@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <update id="getFooFunction" statementType="CALLABLE">
+    {#{result,jdbcType=INTEGER,mode=OUT} = call f_foo_function(
+      #{foo,mode=IN},
+      #{fooOutput,jdbcType=INTEGER,javaType=_boolean,mode=OUT}, 
+      #{error,jdbcType=VARCHAR,mode=OUT})}
+  </update>
+
+</mapper>
