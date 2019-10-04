@@ -1,0 +1,14 @@
+drop procedure if exists P_BI_PROF_RUN_PROCESS;
+
+-- @DELIMITER $
+create procedure P_BI_PROF_RUN_PROCESS 
+  @AD_PROCESS_DATE DATETIME, 
+  @AS_USER VARCHAR(100), 
+  @AL_PROCESS_ID INT , 
+  @AL_PROCESS_STATUS INT OUTPUT
+as
+begin
+  set @AL_PROCESS_STATUS = 1;
+end
+$
+-- @DELIMITER ;

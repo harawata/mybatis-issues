@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <select id="proceedToProcedure" statementType="CALLABLE">
+    {CALL P_BI_PROF_RUN_PROCESS(
+      #{asOfDate, mode=IN, jdbcType=DATE},
+      #{user, mode=IN, jdbcType=VARCHAR},
+      #{processId, mode=IN, jdbcType=NUMERIC},
+      #{output, mode=OUT, jdbcType=INTEGER})}
+  </select>
+
+</mapper>
