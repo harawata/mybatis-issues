@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap type="map" id="productsPerDate">
+    <id column="date_in_question" property="date" />
+    <collection property="products" javaType="list" ofType="test.Product">
+      <id column="product_id" property="id" />
+    </collection>
+  </resultMap>
+
+  <select id="getProductsForSequentialDatesInternal" resultMap="productsPerDate">
+    with dates(d) as (
+      select #{rangeStart,jdbcType=DATE} as d from dual
+      union all
+      select d + 1 as d from dates
+        where #{rangeEnd,jdbcType=DATE} >= d + 1
+    )
+    select dates.d date_in_question, t.product_id
+    from dates
+    left join my_table t on
+      dates.d >= t.valid_from and t.valid_till > dates.d
+  </select>
+
+  <select id="getProductsForRandomDatesInternal" resultMap="productsPerDate">
+    with dates(d) as (
+      <foreach item="date" collection="dates" separator="union all">
+        select #{date,jdbcType=DATE} as d from dual
+      </foreach>
+    )
+    select dates.d date_in_question, t.product_id
+    from dates
+    left join my_table t on
+      dates.d >= t.valid_from and t.valid_till > dates.d
+  </select>
+
+</mapper>
