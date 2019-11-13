@@ -5,13 +5,18 @@
 
 <mapper namespace="test.Mapper">
 
-  <resultMap type="map" id="userRM" autoMapping="false">
-    <id column="id" />
-    <result column="note" property="note" />
+  <resultMap id="outputResultMap" type="test.StoredProcOutput">
+    <result property="Output" column="DiscountValue" />
   </resultMap>
 
-  <select id="myProc" statementType="CALLABLE" resultMap="userRM">
-    {call MY_PROC(#{arg1, mode=IN, jdbcType=VARCHAR})}
+  <select id="callStoredProcedure" statementType="CALLABLE"
+    resultMap="outputResultMap">
+    {call get_discount_value(
+    #{SP_FirstName,mode=IN,jdbcType=NVARCHAR},
+    #{SP_LastName,mode=IN,jdbcType=NVARCHAR},
+    #{SP_Gender,mode=IN,jdbcType=NVARCHAR},
+    #{SP_Birthday,mode=IN,jdbcType=DATE},
+    #{SP_Age,mode=IN,jdbcType=BIGINT}
+    )}
   </select>
-
 </mapper>
