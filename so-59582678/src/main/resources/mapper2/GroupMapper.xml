@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper2.GroupMapper">
+
+  <select id="getGroup" resultType="test.Group">
+    select * from groups where id = #{id}
+  </select>
+
+  <insert id="insertGroup">
+    insert into groups values(#{id}, #{name}, #{additionalInfo})
+  </insert>
+
+</mapper>
