@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+  <settings>
+    <setting name="defaultStatementTimeout" value="1" />
+  </settings>
+
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC">
+        <property name="" value="" />
+      </transactionManager>
+      <dataSource type="UNPOOLED">
+        <property name="driver"
+          value="net.sourceforge.jtds.jdbc.Driver" />
+        <property name="url"
+          value="jdbc:jtds:sqlserver://127.0.0.1:1433/test" />
+        <property name="username" value="sa" />
+        <property name="password" value="Abcdefg7" />
+      </dataSource>
+    </environment>
+  </environments>
+
+  <mappers>
+    <mapper class="test.Mapper" />
+  </mappers>
+
+</configuration>
