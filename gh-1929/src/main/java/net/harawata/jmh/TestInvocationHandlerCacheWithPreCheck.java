@@ -55,17 +55,21 @@ public class TestInvocationHandlerCacheWithPreCheck implements InvocationHandler
 
   private Object invokeDefaultMethodJava9(Object proxy, Method method, Object[] args)
       throws Throwable {
-    return cache.computeIfAbsent(method, m -> {
-      try {
-        final Class<?> declaringClass = method.getDeclaringClass();
-        return ((Lookup) privateLookupInMethod.invoke(null, declaringClass, MethodHandles.lookup()))
-            .findSpecial(declaringClass, m.getName(),
-                MethodType.methodType(m.getReturnType(), m.getParameterTypes()), declaringClass);
-      } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
-          | InvocationTargetException e) {
-        throw new RuntimeException(e);
-      }
-    }).bindTo(proxy).invokeWithArguments(args);
+    MethodHandle handle = cache.get(method);
+    if (handle == null) {
+      handle = cache.computeIfAbsent(method, m -> {
+        try {
+          final Class<?> declaringClass = method.getDeclaringClass();
+          return ((Lookup) privateLookupInMethod.invoke(null, declaringClass, MethodHandles.lookup()))
+              .findSpecial(declaringClass, m.getName(),
+                  MethodType.methodType(m.getReturnType(), m.getParameterTypes()), declaringClass);
+        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+            | InvocationTargetException e) {
+          throw new RuntimeException(e);
+        }
+      });
+    }
+    return handle.bindTo(proxy).invokeWithArguments(args);
   }
 
   private Object invokeDefaultMethodJava8(Object proxy, Method method, Object[] args)
