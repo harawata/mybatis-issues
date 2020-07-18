@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap id="anotherEntityMap" type="test.AnotherEntity">
+    <id column="id" />
+    <result property="otherField" column="otherField" />
+  </resultMap>
+  <!--We need autoMapping, but can't use association in our real use case-->
+  <resultMap id="multiResultSetMap" type="test.User" autoMapping="true">
+    <id column="id" />
+    <result property="name" column="name" />
+  </resultMap>
+  <select id="getMultipleResultSet" resultMap="anotherEntityMap,multiResultSetMap,multiResultSetMap">
+    {call get_multi_resultSets()}
+  </select>
+
+</mapper>
