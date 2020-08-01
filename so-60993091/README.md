@@ -12,7 +12,7 @@ tag-mysql
 tag-batch
 
 ```sh
-$ svn export https://github.com/harawata/mybatis-issues/trunk/so-60993091
+$ svn export https://github.com/harawata/mybatis-issues/branches/gh-sbs-478/so-60993091
 $ cd so-60993091
 $ mvn test
 ```
