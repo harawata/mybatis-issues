@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -10,7 +11,7 @@ import org.apache.ibatis.executor.BatchResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -31,6 +32,25 @@ public class SpringBootTest {
   public void insertThenUpdate() {
     List<BatchResult> result = userService.insertUsers(initUsers());
     assertNotNull(result);
+  }
+
+  @Test
+  public void demoGhSbs478() {
+    List<User> users = new ArrayList<>();
+    users.add(new User(251, "user 251"));
+    users.add(new User(252, "user 252"));
+    users.add(new User(253, "user 253"));
+    users.add(new User(250, "user 250"));
+    try {
+      userService.insertUsers2(users);
+      fail("should throw duplicate key exception");
+    } catch (DuplicateKeyException e) {
+      // expected
+    }
+    assertNotNull(userService.selectUser(250));
+    assertNull(userService.selectUser(251));
+    assertNull(userService.selectUser(252));
+    assertNull(userService.selectUser(253));
   }
 
   private List<User> initUsers() {

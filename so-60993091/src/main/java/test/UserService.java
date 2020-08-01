@@ -54,4 +54,26 @@ public class UserService {
     userMapper.updateUsers();
     return results;
   }
+
+  @Transactional
+  public List<BatchResult> insertUsers2(List<User> users) {
+    List<BatchResult> results = new ArrayList<>();
+    final int batchSize = 100;
+    UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+    final int size = users.size();
+    for (int i = 0; i < size;) {
+      userMapper.insert(users.get(i));
+      i++;
+      if (i % batchSize == 0 || i == size) {
+        results.addAll(sqlSession.flushStatements());
+        sqlSession.clearCache();
+      }
+    }
+    return results;
+  }
+  
+  public User selectUser(Integer id) {
+    UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+    return userMapper.select(id);
+  }
 }
