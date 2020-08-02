@@ -1,7 +1,5 @@
 package test;
 
-import org.apache.ibatis.exceptions.PersistenceException;
-import org.apache.ibatis.executor.BatchExecutorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.ExecutorType;
@@ -9,10 +7,17 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.*;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.io.Reader;
@@ -46,20 +51,8 @@ public class SpringEnvTest {
             runner.runScript(reader);
         }
         // insert all
-        try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)) {
-            Mapper mapper = sqlSession.getMapper(Mapper.class);
-            mapper.insertUser(new User(1, "User1"));
-            mapper.insertUser(new User(2, "User2"));
-            sqlSession.flushStatements();
-            mapper.insertUser(new User(3, "User3"));
-            mapper.insertUser(new User(4, "User4"));
-            sqlSession.flushStatements();
-            sqlSession.commit();
-            fail("Should fail as the user 3 already exists in DB");
-        } catch (PersistenceException e) {
-            assertEquals(BatchExecutorException.class, e.getCause().getClass());
-            assertEquals(BatchUpdateException.class, e.getCause().getCause().getClass());
-        }
+        UserService userService = context.getBean(UserService.class);
+        userService.insertBatch();
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             Mapper mapper = sqlSession.getMapper(Mapper.class);
             assertNull(mapper.getUser(1));
@@ -68,14 +61,18 @@ public class SpringEnvTest {
         }
     }
 
+    @Configuration
+    @ComponentScan
+    @EnableTransactionManagement
     public static class SpringConfig {
 
         @Bean
         public DataSource dataSource() {
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-            dataSource.setUrl("jdbc:hsqldb:mem:mybatisissues");
-            dataSource.setUsername("sa");
+            dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+            dataSource.setUrl("jdbc:mysql://192.168.0.200:3306/test?useSSL=false&rewriteBatchedStatements=true");
+            dataSource.setUsername("root");
+            dataSource.setPassword("root");
             return dataSource;
         }
 
@@ -86,6 +83,47 @@ public class SpringEnvTest {
             sqlSessionFactoryBean.setConfigLocation(
                     new DefaultResourceLoader().getResource("classpath:test/mybatis-config.xml"));
             return sqlSessionFactoryBean;
+        }
+
+        @Bean
+        public PlatformTransactionManager transactionManager() {
+            return new DataSourceTransactionManager(dataSource());
+        }
+
+        @Primary
+        @Bean
+        public SqlSession sqlSession(SqlSessionFactory sqlSessionFactory) {
+            // Use this one for non-batch operation
+            return new SqlSessionTemplate(sqlSessionFactory);
+        }
+
+        @Bean("batchSqlSession")
+        public SqlSession batchSqlSession(SqlSessionFactory sqlSessionFactory) {
+            return new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH);
+        }
+
+    }
+
+    @Component
+    public static class UserService {
+
+        @Autowired
+        @Qualifier("batchSqlSession")
+        private SqlSession batchSqlSession;
+
+        @Transactional
+        public void insertBatch() {
+            try {
+                Mapper mapper = batchSqlSession.getMapper(Mapper.class);
+                mapper.insertUser(new User(1, "User1"));
+                mapper.insertUser(new User(2, "User2"));
+                mapper.insertUser(new User(3, "User3"));
+                mapper.insertUser(new User(4, "User4"));
+                batchSqlSession.flushStatements();
+                fail("Should fail as the user 3 already exists in DB");
+            } catch (Exception e) {
+                assertEquals(BatchUpdateException.class, e.getCause().getClass());
+            }
         }
 
     }
