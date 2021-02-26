@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <insert id="insertUser" statementType="CALLABLE">
+    declare
+      v_new_document_rev_id  NUMBER :=0;
+    begin
+      insert into users (name) values (#{name})
+        returning id into v_new_document_rev_id;
+      <!-- Set value to a property of the parameter -->
+      select v_new_document_rev_id into
+        #{id,mode=OUT,jdbcType=INTEGER} from dual;
+      <!-- Set value to a nested property of the parameter -->
+      select v_new_document_rev_id into
+        #{pet.id,mode=OUT,jdbcType=INTEGER} from dual;
+    end;
+  </insert>
+
+</mapper>
