@@ -27,6 +27,7 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>2.6.1</version>
+      <classifier>jdk8</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
