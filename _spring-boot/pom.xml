@@ -37,6 +37,7 @@
       <artifactId>hsqldb</artifactId>
       <version>2.6.1</version>
       <scope>runtime</scope>
+      <classifier>jdk8</classifier>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
