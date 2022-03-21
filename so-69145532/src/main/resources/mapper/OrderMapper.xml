@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.OrderMapper">
+
+  <resultMap id="selectOrderRes" type="OrderRes">
+    <id column="order_id" property="id"/>
+    <result column="main_id" property="mainId"/>
+    <collection property="fromResList" resultMap="selectFromRes" columnPrefix="from_"/>
+  </resultMap>
+
+  <resultMap id="selectFromRes" type="FromRes">
+    <result column="order_from_id" property="orderFromId"/>
+    <result column="from_name" property="fromName"/>
+    <result column="from_value" property="fromValue"/>
+  </resultMap>
+
+  <select id="getOrderListCursorByMap" resultMap="selectOrderRes">
+    select
+    aorder.id as order_id,
+    aorder.main_id,
+    ofrom.id as from_order_From_Id,
+    ofrom.from_id as from_from_id,
+    ofrom.from_value as from_from_value
+    from order_info aorder
+    LEFT JOIN from_info ofrom on aorder.id = ofrom.order_id
+    and aorder.main_id = #{map.mainId}
+  </select>
+
+
+</mapper>

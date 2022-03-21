@@ -1,0 +1,30 @@
+package test;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import mapper.UserMapper;
+
+@RunWith(SpringRunner.class)
+@org.springframework.boot.test.context.SpringBootTest(classes = Application.class)
+public class SpringBootTest {
+
+  @Autowired
+  private OrderMapper orderMapper;
+
+  @Test
+  public void testGetOrderList() {
+    Map<String, Object> map = new HashMap<>(10);
+    map.put("mainId", 1);
+    Cursor<OrderRes> orderList = orderMapper.getExportOrderListCursorByMap(map);
+    orderList.forEach(order -> {
+      assertEquals("1", order.getFromResList().size());
+    });
+
+  }
+
+}
