@@ -9,18 +9,18 @@ public class FromRes {
   private String fromName;
 
   public Long getOrderFromId() {
-    return getOrderFromId;
+    return orderFromId;
   }
 
-  public void setgetOrderFromId(Long id) {
-    this.getOrderFromId = getOrderFromId;
+  public void setOrderFromId(Long orderFromId) {
+    this.orderFromId = orderFromId;
   }
 
-  public String getfromValue() {
+  public String getFromValue() {
     return fromValue;
   }
 
-  public void setFromName(String fromValue) {
+  public void setFromValue(String fromValue) {
     this.fromValue = fromValue;
   }
 
