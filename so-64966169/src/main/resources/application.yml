@@ -1,5 +1,0 @@
-logging:
-  level:
-    root: info
-    mapper: trace
-    mapper.UserMapper.insertUser: info
