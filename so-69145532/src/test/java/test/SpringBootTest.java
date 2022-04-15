@@ -1,6 +1,6 @@
 package test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import mapper.OrderMapper;
 import org.apache.ibatis.cursor.Cursor;
