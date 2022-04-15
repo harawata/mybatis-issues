@@ -15,7 +15,7 @@
     <result column="from_value" property="fromValue"/>
   </resultMap>
 
-  <select id="getOrderListCursorByMap" resultMap="selectOrderRes">
+  <select id="getOrderListCursorByMap" resultMap="selectOrderRes" resultOrdered="true">
     select
     aorder.id as order_id,
     aorder.main_id,
