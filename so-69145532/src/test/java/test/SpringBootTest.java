@@ -27,7 +27,7 @@ public class SpringBootTest {
     map.put("mainId", 1);
     Cursor<OrderRes> orderList = orderMapper.getOrderListCursorByMap(map);
     orderList.forEach(order -> {
-      assertEquals("1", order.getFromResList().size());
+      assertEquals(1, order.getFromResList().size());
     });
 
   }
