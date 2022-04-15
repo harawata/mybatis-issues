@@ -1,8 +1,0 @@
-CREATE TABLE first_table (
-ID INTEGER NOT NULL,
-NAME VARCHAR(16)
-);
-
--- //@UNDO
-
-DROP TABLE first_table;
