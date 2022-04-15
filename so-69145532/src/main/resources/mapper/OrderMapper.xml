@@ -3,13 +3,13 @@
 
 <mapper namespace="mapper.OrderMapper">
 
-  <resultMap id="selectOrderRes" type="OrderRes">
+  <resultMap id="selectOrderRes" type="test.OrderRes">
     <id column="order_id" property="id"/>
     <result column="main_id" property="mainId"/>
     <collection property="fromResList" resultMap="selectFromRes" columnPrefix="from_"/>
   </resultMap>
 
-  <resultMap id="selectFromRes" type="FromRes">
+  <resultMap id="selectFromRes" type="test.FromRes">
     <result column="order_from_id" property="orderFromId"/>
     <result column="from_name" property="fromName"/>
     <result column="from_value" property="fromValue"/>
