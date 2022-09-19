@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap id="movieResult" type="test.Movie">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="year" column="year"/>
+  </resultMap>
+
+  <resultMap id="artistResult" type="test.Artist">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+  </resultMap>
+
+  <resultMap id="multipleQueriesResult" type="test.DivideOut" autoMapping="true">
+    <collection property="movie"
+                resultSet="movies"
+                resultMap="movieResult" />
+    <collection property="artist"
+                resultSet="artists"
+                resultMap="artistResult" />
+  </resultMap>
+
+  <select id="selectMultiple" resultSets="dummy,movies,artists"
+    resultMap="multipleQueriesResult" statementType="CALLABLE">
+    BEGIN
+      SELECT 1
+    END
+    BEGIN
+      SELECT
+             M.ID_         AS id,
+             M.NAME_       AS name,
+             M.YEAR_       AS year
+      FROM Movie AS M
+    END
+    BEGIN
+      SELECT A.ID_   AS id,
+             A.NAME_ AS name
+      FROM Artist AS A
+    END
+  </select>
+
+  <select id="selectTwoLists" resultMap="movieResult,artistResult"
+      statementType="CALLABLE">
+    BEGIN
+      SELECT
+             M.ID_         AS id,
+             M.NAME_       AS name,
+             M.YEAR_       AS year
+      FROM Movie AS M
+    END
+    BEGIN
+      SELECT A.ID_   AS id,
+             A.NAME_ AS name
+      FROM Artist AS A
+    END
+  </select>
+
+</mapper>
