@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap id="studentMap" type="test.StudentEntity">
+    <result property="id" column="id" />
+    <result property="name" column="name" />
+    <result property="auditTimestamp" column="auditTimestamp" />
+  </resultMap>
+
+  <select id="getStudent" resultMap="studentMap">
+    SELECT
+      s.id
+      , s.name
+      , s.audit_timestamp as auditTimestamp
+    FROM
+      student_audit s
+    WHERE
+      s.audit_timestamp = #{auditTimestamp}
+  </select>
+
+</mapper>
