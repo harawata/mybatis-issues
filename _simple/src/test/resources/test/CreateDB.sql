@@ -6,5 +6,4 @@ create table users (
 );
 
 insert into users (id, name) values
-(1, 'User1'),
-(2, 'User2');
+(1, 'User1');
