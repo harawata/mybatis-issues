@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+  http://www.springframework.org/schema/tx
+        https://www.springframework.org/schema/tx/spring-tx.xsd
+  http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+  <tx:annotation-driven />
+
+  <bean id="dataSource"
+    class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName"
+      value="org.hsqldb.jdbc.JDBCDriver" />
+    <property name="url"
+      value="jdbc:hsqldb:mem:mybatisissues;hsqldb.sqllog=3;" />
+    <property name="username" value="sa" />
+    <property name="password" value="" />
+  </bean>
+
+  <jdbc:initialize-database
+    data-source="dataSource">
+    <jdbc:script location="classpath:test/CreateDB.sql" />
+  </jdbc:initialize-database>
+
+  <bean id="transactionManager"
+    class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <constructor-arg ref="dataSource" />
+  </bean>
+
+  <bean id="sqlSessionFactory"
+    class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="configLocation"
+      value="classpath:test/mybatis-config.xml" />
+  </bean>
+
+  <bean id="batchSqlSession"
+    class="org.mybatis.spring.SqlSessionTemplate">
+    <constructor-arg index="0" ref="sqlSessionFactory" />
+    <constructor-arg index="1" value="BATCH" />
+  </bean>
+
+  <bean id="userService" class="service.UserService">
+    <property name="batchSqlSession" ref="batchSqlSession" />
+  </bean>
+
+  <bean id="userService2" class="service.UserService2">
+    <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+  </bean>
+
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+  <Appenders>
+    <Console name="stdout" target="SYSTEM_OUT">
+      <PatternLayout pattern="%5p [%t] - %m%n"
+        charset="utf-8" />
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Logger name="mapper" level="trace" />
+    <Logger name="org.springframework.jdbc" level="debug" />
+    <Logger name="org.mybatis" level="debug" />
+    <Root level="info">
+      <AppenderRef ref="stdout" />
+    </Root>
+  </Loggers>
+</Configuration>
