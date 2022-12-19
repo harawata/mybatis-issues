@@ -10,7 +10,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <spring.version>6.0.2</spring.version>
   </properties>
   <dependencies>
     <dependency>
@@ -34,17 +33,17 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
-      <version>\${spring.version}</version>
+      <version>6.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>\${spring.version}</version>
+      <version>6.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>\${spring.version}</version>
+      <version>6.0.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
