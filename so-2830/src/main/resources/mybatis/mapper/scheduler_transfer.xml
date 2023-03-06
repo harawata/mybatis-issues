@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.SchedulerTransferMapper">
+
+    <insert id="insertTransactionHistInit" parameterType="com.example.model.TransferTxn">
+        <selectKey keyProperty="tnxId,tnxDetailId"  statementType="PREPARED" order="BEFORE" resultType="com.example.model.TransferTxn">
+            SELECT MB_TRANSACTION_SEQ.NEXTVAL AS tnxId, MB_TRANSACTION_DETAIL_SEQ.nextval tnxDetailId FROM dual
+        </selectKey>
+
+        insert ALL
+        into MB_TRANSACTION (
+        TRANX_ID,
+        AMOUNT,
+        CCY,
+        CREDIT_NAME,
+        CONSUMER_NAME)
+        values (
+        #{tnxId},
+        #{transferDto.amount,jdbcType=NUMERIC},
+        #{transferDto.amountCcy},
+        #{transferDto.toAccountNo},
+        #{transferDto.toAccountName}
+        )
+        into MB_TRANSACTION_DETAIL (TRANX_DETAIL_ID, TRANX_ID, TRANX_PHARSE)
+        values (#{tnxDetailId}, #{tnxId}, 1)
+        select *
+        from DUAL
+    </insert>
+
+</mapper>

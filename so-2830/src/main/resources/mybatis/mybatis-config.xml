@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="false"/>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="useGeneratedKeys" value="false"/>
+        <setting name="defaultExecutorType" value="REUSE"/> <!--SIMPLE-->
+        <setting name="defaultStatementTimeout" value="60"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="logImpl" value="SLF4J"/>
+        <setting name="jdbcTypeForNull" value="NULL" />
+        <!--Cause: java.sql.BatchUpdateException: ORA-00936: missing expression NTT need change statment insert... <setting name="defaultExecutorType" value="BATCH"/>-->
+    </settings>
+
+    <!-- CONFIG PACKAGE MODEL ENTITY -->
+    <typeAliases>
+        <typeAlias alias="schedulerTransferDto" type="com.example.mapper.SchedulerTransferMapper"/>
+    </typeAliases>
+</configuration>
+
+
