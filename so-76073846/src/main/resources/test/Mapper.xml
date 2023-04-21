@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <insert id="insert" statementType="CALLABLE">
+    BEGIN
+      INSERT INTO ${genericRecordMap.tableName}
+      <foreach open="(" close=")"
+        collection="genericRecordMap.tableMap" index="col" separator=",">
+        <trim>${col}</trim>
+      </foreach>
+      VALUES
+      <foreach open="(" close=")"
+        collection="genericRecordMap.tableMap" item="val" separator=",">
+        <trim>#{val}</trim>
+      </foreach>
+      RETURNING ${genericRecordMap.pk} INTO #{genericRecordMap.id,mode=OUT,jdbcType=BIGINT};
+    END;
+  </insert>
+
+</mapper>
