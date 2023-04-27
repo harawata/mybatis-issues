@@ -5,10 +5,10 @@
 
 <mapper namespace="com.company.mapper.UserMapper">
 
-  <resultMap id="userResultMap" type="com.company.mapper.UserMapper">
+  <resultMap id="userResultMap" type="com.company.model.User">
     <id property="id" column="id" />
     <result property="name" column="name" />
-    <result property="status" column="status" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+    <result property="status" column="status" />
 
   </resultMap>
 
@@ -23,7 +23,7 @@
 
   <insert id="insertUser">
     insert into users values(#{id}, #{name}, #{status,
-    javaType="com.company.model.UserStatus"})
+    javaType=com.company.model.UserStatus})
   </insert>
 
 </mapper>
