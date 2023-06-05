@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+  <resultMap id="schemaMap" type="test.Schema">
+    <constructor>
+      <!--
+        There is no difference between <arg/> and
+        <idArg/> here.
+        It's just a good practice to always specify
+        the key columns.
+      -->
+      <idArg column="TABLE_SCHEMA" javaType="String" />
+    </constructor>
+  </resultMap>
+
+  <resultMap id="tableConstraintMap" type="test.TableConstraint">
+    <constructor>
+      <!--
+        I assumed CONSTRAINT_NAME is the key of TableConstraint.
+      -->
+      <idArg column="CONSTRAINT_NAME" javaType="String" />
+      <!--
+      <arg column="CONSTRAINT_TYPE"
+        javaType="TableConstraint$ConstraintTypes"
+        typeHandler="ConstraintTypesTypeHandler" />
+       -->
+      <arg column="CONSTRAINT_SCHEMA" resultMap="schemaMap"
+        javaType="test.Schema" />
+      <!--
+      <arg column="TABLE_SCHEMA" resultMap="schemaMap"
+        javaType="Schema" />
+       -->
+      <arg column="TABLE_NAME" javaType="String" />
+    </constructor>
+  </resultMap>
+
+  <resultMap id="columnMap" type="test.Column">
+    <constructor>
+      <!--
+        I assumed COLUMN_NAME is the key of Column.
+        Note that there are two 'COLUMN_NAME' columns
+        in the result set.
+        If they could have different values in the same row,
+        you need to use column alias.
+      -->
+      <idArg column="COLUMN_NAME" javaType="String" />
+      <arg column="COLUMN_TYPE" javaType="String" />
+    </constructor>
+    <result property="defaultValue" column="COLUMN_DEFAULT" />
+    <!--
+    <result property="extraDetail" column="EXTRA" />
+    <result property="key" column="COLUMN_KEY" />
+    <result property="nullable" column="IS_NULLABLE"
+      typeHandler="BooleanTypeHandler" />
+    <result property="characterMaximumLength"
+      column="CHARACTER_MAXIMUM_LENGTH" />
+    <result property="numericPrecision"
+      column="NUMERIC_PRECISION" />
+    <result property="numericScale" column="NUMERIC_SCALE" />
+    <result property="ordinalPosition" column="ORDINAL_POSITION" />
+     -->
+  </resultMap>
+
+  <resultMap id="tableMap" type="test.Table">
+    <constructor>
+      <idArg column="TABLE_NAME" javaType="String" />
+      <!--
+        If 'resultMap' is specified for <idArg/>,
+        it is not used to identify the object.
+        So, there is no actual difference <arg/> is used.
+        It's, again, just a good practice.
+        To use 'TABLE_SCHEMA' as one of the keys, <id/> is added below.
+      -->
+      <idArg resultMap="schemaMap" javaType="test.Schema" />
+    </constructor>
+    <!--
+      See the above comment.
+      Note that it won't be mapped to any Java object
+      because there is no 'property' attribute.
+    -->
+    <id column="TABLE_SCHEMA" />
+    <result property="createOptions" column="CREATE_OPTIONS" />
+    <result property="comment" column="TABLE_COMMENT" />
+    <!--
+      Assuming that 'columns' and 'constraints' are collections,
+      <collection/> should be used, not <association/>.
+    -->
+    <collection property="columns" resultMap="columnMap" />
+    <collection
+      property="constraints" resultMap="tableConstraintMap" />
+  </resultMap>
+
+  <select id="selectTable" resultMap="tableMap"><![CDATA[
+    SELECT T.TABLE_NAME,
+           T.TABLE_SCHEMA,
+           T.CREATE_OPTIONS,
+           T.TABLE_COMMENT,
+           C.COLUMN_NAME,
+           C.COLUMN_TYPE,
+           C.COLUMN_DEFAULT,
+           C.EXTRA,
+           C.COLUMN_KEY,
+           C.IS_NULLABLE,
+           C.NUMERIC_PRECISION,
+           C.NUMERIC_SCALE,
+           C.ORDINAL_POSITION,
+           C.CHARACTER_MAXIMUM_LENGTH,
+           TC.CONSTRAINT_NAME,
+           TC.CONSTRAINT_TYPE,
+           TC.TABLE_SCHEMA,
+           TC.TABLE_NAME AS CONSTRAINT_TABLE_NAME,
+           TC.CONSTRAINT_SCHEMA,
+           KCU.COLUMN_NAME
+    FROM INFORMATION_SCHEMA.TABLES AS T
+             INNER JOIN
+         INFORMATION_SCHEMA.COLUMNS AS C
+         ON T.TABLE_SCHEMA = C.TABLE_SCHEMA
+             AND T.TABLE_NAME = C.TABLE_NAME
+             LEFT OUTER JOIN
+         INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC
+         ON TC.TABLE_SCHEMA = T.TABLE_SCHEMA
+             AND C.TABLE_SCHEMA = TC.TABLE_SCHEMA
+             AND TC.CONSTRAINT_SCHEMA = T.TABLE_SCHEMA
+             AND TC.CONSTRAINT_SCHEMA = C.TABLE_SCHEMA
+             AND TC.TABLE_NAME = C.TABLE_NAME
+             AND TC.TABLE_NAME = T.TABLE_NAME
+             AND C.TABLE_NAME = T.TABLE_NAME
+             INNER JOIN information_schema.KEY_COLUMN_USAGE AS KCU
+                        ON KCU.TABLE_SCHEMA = TC.TABLE_SCHEMA
+                            AND KCU.TABLE_NAME = TC.TABLE_NAME
+                            AND KCU.CONSTRAINT_NAME = TC.CONSTRAINT_NAME
+                            AND C.COLUMN_NAME = KCU.COLUMN_NAME
+    WHERE T.TABLE_TYPE = 'BASE TABLE'
+      AND T.TABLE_NAME = 'order_items'
+      AND TC.TABLE_SCHEMA = T.TABLE_SCHEMA
+      AND C.TABLE_SCHEMA = TC.TABLE_SCHEMA
+      AND C.TABLE_SCHEMA = T.TABLE_SCHEMA
+      AND C.TABLE_NAME = T.TABLE_NAME
+      AND C.TABLE_NAME = TC.TABLE_NAME
+      AND TC.TABLE_NAME = T.TABLE_NAME
+    ORDER BY T.TABLE_SCHEMA, C.ORDINAL_POSITION;
+    ]]>
+  </select>
+
+</mapper>
