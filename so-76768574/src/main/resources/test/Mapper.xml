@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <update id="resolve" statementType="CALLABLE"><![CDATA[
+    {call RESOLVE_76768574(
+      #{idProcesso,mode=IN,jdbcType=NUMERIC},
+      #{outText,jdbcType=ARRAY,jdbcTypeName=ARR_TEXT_OUT,mode=OUT,typeHandler=test.OutTextTypeHandler}
+    )}
+  ]]></update>
+
+</mapper>
