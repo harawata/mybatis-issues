@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <resultMap type="test.Author" id="authorRM">
+    <id column="id" property="id" />
+    <result property="username" column="username" />
+  </resultMap>
+
+  <resultMap type="test.Blog" id="blogRM">
+    <id column="id" property="id" />
+    <result property="title" column="title" />
+    <association property="author" resultMap="authorRM" columnPrefix="ba_"/>
+    <collection property="posts" ofType="test.Post">
+      <id column="p_id" property="id" />
+      <result property="subject" column="p_subject" />
+      <association property="author" resultMap="authorRM" columnPrefix="pa_" />
+      <association property="blog" resultMap="blogRM" />
+    </collection>
+  </resultMap>
+
+  <select id="getBlog" resultMap="blogRM"><![CDATA[
+    select
+      id, title,
+      ba.id ba_id, ba.username ba_username,
+      p.id p_id, p.subject p_subject,
+      pa.id pa_id, pa.username pa_username
+    from blog b
+    left join author ba on ba.id = b.author_id
+    left join post p on p.blog_id = b.id
+    left join author pa on pa.id = p.author_id
+    where b.id = #{id}
+  ]]></select>
+
+</mapper>
