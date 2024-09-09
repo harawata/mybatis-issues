@@ -50,4 +50,38 @@ public class SimpleTest {
       assertSame(blog, post3.getBlog());
     }
   }
+
+  @Test
+  public void shouldGetABlogWithResultHandler() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      BlogResultHandler resultHandler = new BlogResultHandler();
+      mapper.getBlogs(resultHandler);
+
+      List<Blog> blogs = resultHandler.getBlogs();
+      assertEquals(3, blogs.size());
+
+      Blog blog1 = blogs.get(0);
+      Blog blog2 = blogs.get(1);
+      Blog blog3 = blogs.get(2);
+
+      Author mia = blog1.getAuthor();
+      Author bob = blog2.getAuthor();
+
+      assertSame(mia, blog3.getAuthor());
+
+      List<Post> blog1Posts = blog1.getPosts();
+      assertSame(mia, blog1Posts.get(0).getAuthor());
+      assertSame(bob, blog1Posts.get(1).getAuthor());
+      assertSame(mia, blog1Posts.get(2).getAuthor());
+
+      List<Post> blog2Posts = blog2.getPosts();
+      assertSame(mia, blog2Posts.get(0).getAuthor());
+      assertSame(mia, blog2Posts.get(1).getAuthor());
+
+      List<Post> blog3Posts = blog3.getPosts();
+      assertSame(bob, blog3Posts.get(0).getAuthor());
+      assertSame(mia, blog3Posts.get(1).getAuthor());
+    }
+  }
 }

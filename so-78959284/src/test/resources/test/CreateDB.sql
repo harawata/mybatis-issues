@@ -34,5 +34,7 @@ insert into post values
 (2, 'Post 2', 2, 1),
 (3, 'Post 3', 1, 2),
 (4, 'Post 4', 2, 1),
-(5, 'Post 5', 1, 1);
+(5, 'Post 5', 1, 1),
+(6, 'Post 6', 3, 2),
+(7, 'Post 7', 3, 1);
 

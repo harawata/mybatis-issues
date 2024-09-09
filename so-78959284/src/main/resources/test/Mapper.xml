@@ -22,7 +22,7 @@
     </collection>
   </resultMap>
 
-  <select id="getBlog" resultMap="blogRM"><![CDATA[
+  <sql id="query"><![CDATA[
     select
       id, title,
       ba.id ba_id, ba.username ba_username,
@@ -32,7 +32,16 @@
     left join author ba on ba.id = b.author_id
     left join post p on p.blog_id = b.id
     left join author pa on pa.id = p.author_id
+  ]]></sql>
+
+  <select id="getBlog" resultMap="blogRM">
+    <include refid="query"/>
     where b.id = #{id}
-  ]]></select>
+  </select>
+
+  <select id="getBlogs" resultMap="blogRM" resultOrdered="true">
+    <include refid="query"/>
+    order by b.id, p.id
+  </select>
 
 </mapper>
