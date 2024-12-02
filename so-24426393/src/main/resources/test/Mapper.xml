@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <update id="pr_start" statementType="CALLABLE">
+    {
+      call pkg_24426393.pr_start(
+        #{io_calc,mode=INOUT,jdbcType=STRUCT,jdbcTypeName=TYPE_CALC},
+        #{in_restart,mode=IN,jdbcType=BOOLEAN},
+        #{in_user,mode=IN,jdbcType=VARCHAR}
+      )
+    }
+  </update>
+
+  <select id="pr_start_select" statementType="CALLABLE">
+    {
+      call pkg_24426393.pr_start(
+        #{io_calc,mode=INOUT,jdbcType=STRUCT,jdbcTypeName=TYPE_CALC},
+        #{in_restart,mode=IN,jdbcType=BOOLEAN},
+        #{in_user,mode=IN,jdbcType=VARCHAR}
+      )
+    }
+  </select>
+
+</mapper>
