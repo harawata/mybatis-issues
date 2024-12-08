@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test.Mapper">
+
+  <!-- SQL fragment for dynamic filtering -->
+  <sql id="queryTaskStatusCondition">
+    <where>
+      <!-- Filter by years -->
+      <if test="years != null and !years.isEmpty()">
+        AND SUBSTRING(task_finish_time, 1, 4) IN
+        <foreach collection="years" item="year" open="("
+          close=")" separator=",">
+          #{year}
+        </foreach>
+      </if>
+
+      <!-- Filter by months -->
+      <if test="months != null and !months.isEmpty()">
+        AND SUBSTRING(task_finish_time, 6, 2) IN
+        <foreach collection="months" item="month" open="("
+          close=")" separator=",">
+          #{month}
+        </foreach>
+      </if>
+
+      <!-- Filter by region -->
+      <if test="region != null and !region.isEmpty()">
+        AND region_name IN
+        <foreach collection="region" item="region" open="("
+          close=")" separator=",">
+          #{region}
+        </foreach>
+      </if>
+
+      <!-- Filter by office -->
+      <if test="office != null and !office.isEmpty()">
+        AND office_name IN
+        <foreach collection="office" item="office" open="("
+          close=")" separator=",">
+          #{office}
+        </foreach>
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectWithResultHandler" resultType="map">
+    SELECT
+      region_name,
+      office_name,
+      CONCAT(SUBSTRING(task_finish_time, 1, 4), '_', SUBSTRING(task_finish_time, 6, 2)) year_month
+    FROM task_list
+    <include refid="queryTaskStatusCondition" />
+  </select>
+</mapper>
