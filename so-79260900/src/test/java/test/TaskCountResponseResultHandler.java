@@ -28,8 +28,8 @@ public class TaskCountResponseResultHandler implements ResultHandler<Map<String,
     // this map contains [column label] vs. [column value]
     Map<String, String> row = resultContext.getResultObject();
 
-    Entry<String, String> regionOfficeKey = Map.entry(row.get("REGION_NAME"), row.get("OFFICE_NAME"));
-    String monthKey = "month_" + row.get("YEAR_MONTH");
+    Entry<String, String> regionOfficeKey = Map.entry(row.get("region_name"), row.get("office_name"));
+    String monthKey = "month_" + row.get("year_month");
 
     map.computeIfAbsent(regionOfficeKey, k -> {
       TaskCountResponse v = new TaskCountResponse();

@@ -50,8 +50,37 @@
     SELECT
       region_name,
       office_name,
-      CONCAT(SUBSTRING(task_finish_time, 1, 4), '_', SUBSTRING(task_finish_time, 6, 2)) year_month
+      CONCAT(SUBSTRING(task_finish_time, 1, 4), '_', SUBSTRING(task_finish_time, 6, 2)) `year_month`
     FROM task_list
     <include refid="queryTaskStatusCondition" />
+  </select>
+
+  <resultMap type="test.TaskCountResponse" id="tcrRM">
+    <id property="region" column="region_name" />
+    <id property="office" column="office_name" />
+    <result property="monthlyCounts" column="monthlyCounts"
+      typeHandler="test.MonthlyCountsTypeHandler" />
+  </resultMap>
+
+  <select id="selectWithTypeHandler" resultMap="tcrRM">
+    SELECT
+      region_name,
+      office_name,
+      CONCAT(
+      <foreach collection="years" item="year" separator=",">
+        <foreach collection="months" item="month" separator=",">
+          CONCAT('month_',#{year},'_',#{month},'=',
+            COUNT(CASE WHEN SUBSTRING(task_finish_time, 1, 7) = CONCAT(#{year}, '-', #{month}) THEN 1 END),
+            ',')
+        </foreach>
+      </foreach>
+      ) AS monthlyCounts
+    FROM task_list
+    <include refid="queryTaskStatusCondition" />
+    GROUP BY
+      region_name,
+      office_name
+    ORDER BY
+      region_name ASC
   </select>
 </mapper>

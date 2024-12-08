@@ -1,4 +1,4 @@
-drop table task_list if exists;
+drop table if exists task_list;
 
 create table task_list (
   region_name varchar(20),

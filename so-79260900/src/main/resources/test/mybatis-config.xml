@@ -11,9 +11,10 @@
         <property name="" value="" />
       </transactionManager>
       <dataSource type="UNPOOLED">
-        <property name="driver" value="org.hsqldb.jdbcDriver" />
-        <property name="url" value="jdbc:hsqldb:mem:mybatisissues" />
-        <property name="username" value="sa" />
+        <property name="driver" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://127.0.0.1:3309/test" />
+        <property name="username" value="root" />
+        <property name="password" value="test" />
       </dataSource>
     </environment>
   </environments>
