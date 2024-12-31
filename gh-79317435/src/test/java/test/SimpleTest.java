@@ -46,6 +46,7 @@ class SimpleTest
 		configuration.setEnvironment(environment);
 		configuration.addMapper(Mapper.class);
 		configuration.setLogImpl(Slf4jImpl.class);
+		configuration.setObjectWrapperFactory(new MyObjectWrapperFactory());
 		sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 	}
 
