@@ -9,9 +9,9 @@
     select * from users where id = #{id}
   </select>
 
-  <insert id="insertUser">
-    insert into users (id, name, disabled)
-    values (#{id}, #{name}, #{disabled})
+  <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into users (name, disabled)
+    values (#{name}, #{disabled})
   </insert>
 
 </mapper>

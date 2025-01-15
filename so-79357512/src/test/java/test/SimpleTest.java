@@ -33,18 +33,19 @@ public class SimpleTest {
 
   @Test
   public void shouldInsertAUser() {
+    Integer id;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
-      user.setId(2);
       user.setName("User2");
       user.setDisabled(true);
       mapper.insertUser(user);
       sqlSession.commit();
+      id = user.getId();
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUser(2);
+      User user = mapper.getUser(id);
       assertEquals("User2", user.getName());
       assertTrue(user.isDisabled());
     }
