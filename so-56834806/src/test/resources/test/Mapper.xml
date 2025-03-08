@@ -12,12 +12,24 @@
 
   <insert id="saveUsers" statementType="CALLABLE">
     {call SAVE_USERS(
-      #{singleUser,jdbcType=STRUCT,typeHandler=test.UserTypeHandler},
+      #{singleUser,typeHandler=test.UserTypeHandler},
       #{users,typeHandler=test.UserListTypeHandler},
       #{namePrefix},
       #{outParam.userCount,jdbcType=INTEGER,mode=OUT},
       #{outParam.userStruct,jdbcType=STRUCT,jdbcTypeName=S_USER_OBJ,mode=OUT,typeHandler=test.UserTypeHandler},
       #{outParam.userStructArray,jdbcType=ARRAY,jdbcTypeName=S_USER_OBJ_LIST,mode=OUT,typeHandler=test.UserListTypeHandler},
+      #{outParam.userCursor,jdbcType=CURSOR,javaType=java.sql.ResultSet,mode=OUT,resultMap=userRM}
+    )}
+  </insert>
+
+  <insert id="sqlDataSaveUsers" statementType="CALLABLE">
+    {call SAVE_USERS(
+      #{singleUser}, <!-- No type handler needed. setObject() works -->
+      #{users,typeHandler=test.SqlDataUserListTypeHandler},
+      #{namePrefix},
+      #{outParam.userCount,jdbcType=INTEGER,mode=OUT},
+      #{outParam.userStruct,jdbcType=STRUCT,jdbcTypeName=S_USER_OBJ,mode=OUT},
+      #{outParam.userStructArray,jdbcType=ARRAY,jdbcTypeName=S_USER_OBJ_LIST,mode=OUT,typeHandler=test.SqlDataUserListTypeHandler},
       #{outParam.userCursor,jdbcType=CURSOR,javaType=java.sql.ResultSet,mode=OUT,resultMap=userRM}
     )}
   </insert>
